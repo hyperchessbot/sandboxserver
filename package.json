@@ -1,0 +1,13 @@
+{
+  "name": "3q300",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "/index.html",
+  "devDependencies": {
+    "nodemon": "latest"
+  },
+  "scripts": {
+    "start": "nodemon server.js"
+  }
+}
