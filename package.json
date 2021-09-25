@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "keywords": [],
-  "main": "/index.html",
+  "main": "server.js",
   "devDependencies": {
     "nodemon": "latest"
+  },
+  "dependencies": {
+    "express": "latest"
   },
   "scripts": {
     "start": "nodemon server.js"
