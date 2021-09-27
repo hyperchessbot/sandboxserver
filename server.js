@@ -28,7 +28,9 @@ setTimeout((_) => {
 }, 1000);
 
 app.get("/", (req, res) => {
-  res.send("Express Hello World!");
+  res.send(
+    `Lichess puzzles contributors toplist. Api: <a href="https://u39dm.sse.codesandbox.io/toplist?page=1">https://u39dm.sse.codesandbox.io/toplist?page=1</a> .`
+  );
 });
 
 app.get("/toplist", (req, res) => {
