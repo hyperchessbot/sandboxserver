@@ -27,7 +27,11 @@ setTimeout((_) => {
       );
     })
     .catch((err) => console.log("problem", err));
-}, 1000);
+}, 100);
+
+function noPuzzles() {
+  return `${header} Database not yet downloaded. Try a bit later.`;
+}
 
 app.get("/", (req, res) => {
   res.send(header);
@@ -39,6 +43,10 @@ function user2link(user) {
 }
 
 app.get("/user", (req, res) => {
+  if (!puzzles) {
+    res.send(noPuzzles());
+    return;
+  }
   console.log("user", req.query);
   const user = req.query.user;
   console.log("looking up record");
@@ -65,6 +73,10 @@ app.get("/user", (req, res) => {
 });
 
 app.get("/toplist", (req, res) => {
+  if (!puzzles) {
+    res.send(noPuzzles());
+    return;
+  }
   console.log("toplist", req.query);
   const page = parseInt(req.query.page, 10) - 1;
   const start = page * TOPLIST_CHUNK + 1;
