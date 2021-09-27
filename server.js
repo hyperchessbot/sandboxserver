@@ -5,6 +5,8 @@ const download = require("download");
 
 const TOPLIST_CHUNK = 20;
 
+const header = `Lichess puzzles contributors toplist. Api: <a href="https://u39dm.sse.codesandbox.io/toplist?page=1">https://u39dm.sse.codesandbox.io/toplist?page=1</a> , <a href="https://u39dm.sse.codesandbox.io/user?user=DrNykterstein">https://u39dm.sse.codesandbox.io/user?user=DrNykterstein</a> . <hr>\n`;
+
 var puzzles = null;
 
 setTimeout((_) => {
@@ -28,9 +30,7 @@ setTimeout((_) => {
 }, 1000);
 
 app.get("/", (req, res) => {
-  res.send(
-    `Lichess puzzles contributors toplist. Api: <a href="https://u39dm.sse.codesandbox.io/toplist?page=1">https://u39dm.sse.codesandbox.io/toplist?page=1</a> , <a href="https://u39dm.sse.codesandbox.io/user?user=DrNykterstein">https://u39dm.sse.codesandbox.io/user?user=DrNykterstein</a> .`
-  );
+  res.send(header);
 });
 
 app.get("/user", (req, res) => {
@@ -43,7 +43,7 @@ app.get("/user", (req, res) => {
   });
   console.log("done, record", record.split(""));
   if (!record) {
-    res.send(`${user} not found`);
+    res.send(`${header} ${user} not found`);
     return;
   }
   const [rank, username, num, userpuzzles] = record.split(",");
@@ -51,7 +51,9 @@ app.get("/user", (req, res) => {
     const link = `https://lichess.org/training/${puzzle}`;
     return `<a href="${link}" target="_blank" rel="noopener noreferrer">${puzzle}</a>`;
   });
-  res.send(`${rank} ${username} ${num} ${userpuzzlelinks.join(" | ")}`);
+  res.send(
+    `${header} ${rank} ${username} ${num} ${userpuzzlelinks.join(" | ")}`
+  );
 });
 
 app.get("/toplist", (req, res) => {
@@ -64,7 +66,7 @@ app.get("/toplist", (req, res) => {
     return `<tr><td>${rank}</td><td>${name}</td><td align="center">${num}</td></tr>`;
   });
   res.send(
-    `<table cellpadding="3" cellspacing="3" border="1"><tr><td>Rank</td><td>User</td><td>Number of puzzles</td></tr>` +
+    `${header} <table cellpadding="3" cellspacing="3" border="1"><tr><td>Rank</td><td>User</td><td>Number of puzzles</td></tr>` +
       bare.join("\n") +
       "</table>"
   );
