@@ -3,7 +3,7 @@ const app = express();
 const port = 3000;
 const download = require("download");
 
-const TOPLIST_CHUNK = 10;
+const TOPLIST_CHUNK = 20;
 
 var puzzles = null;
 
@@ -29,8 +29,29 @@ setTimeout((_) => {
 
 app.get("/", (req, res) => {
   res.send(
-    `Lichess puzzles contributors toplist. Api: <a href="https://u39dm.sse.codesandbox.io/toplist?page=1">https://u39dm.sse.codesandbox.io/toplist?page=1</a> .`
+    `Lichess puzzles contributors toplist. Api: <a href="https://u39dm.sse.codesandbox.io/toplist?page=1">https://u39dm.sse.codesandbox.io/toplist?page=1</a> , <a href="https://u39dm.sse.codesandbox.io/user?user=DrNykterstein">https://u39dm.sse.codesandbox.io/user?user=DrNykterstein</a> .`
   );
+});
+
+app.get("/user", (req, res) => {
+  console.log("user", req.query);
+  const user = req.query.user;
+  console.log("looking up record");
+  const record = puzzles.find((puzzle) => {
+    const [rank, testuser] = puzzle.split(",");
+    return testuser.toLowerCase() === user.toLowerCase();
+  });
+  console.log("done, record", record.split(""));
+  if (!record) {
+    res.send(`${user} not found`);
+    return;
+  }
+  const [rank, username, num, userpuzzles] = record.split(",");
+  const userpuzzlelinks = userpuzzles.split(" ").map((puzzle) => {
+    const link = `https://lichess.org/training/${puzzle}`;
+    return `<a href="${link}" target="_blank" rel="noopener noreferrer">${puzzle}</a> | `;
+  });
+  res.send(`${rank} ${username} ${num} ${userpuzzlelinks}`);
 });
 
 app.get("/toplist", (req, res) => {
