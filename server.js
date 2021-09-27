@@ -49,9 +49,9 @@ app.get("/user", (req, res) => {
   const [rank, username, num, userpuzzles] = record.split(",");
   const userpuzzlelinks = userpuzzles.split(" ").map((puzzle) => {
     const link = `https://lichess.org/training/${puzzle}`;
-    return `<a href="${link}" target="_blank" rel="noopener noreferrer">${puzzle}</a> | `;
+    return `<a href="${link}" target="_blank" rel="noopener noreferrer">${puzzle}</a>`;
   });
-  res.send(`${rank} ${username} ${num} ${userpuzzlelinks}`);
+  res.send(`${rank} ${username} ${num} ${userpuzzlelinks.join(" | ")}`);
 });
 
 app.get("/toplist", (req, res) => {
