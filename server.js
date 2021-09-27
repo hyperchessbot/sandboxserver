@@ -37,15 +37,18 @@ app.get("/user", (req, res) => {
   console.log("user", req.query);
   const user = req.query.user;
   console.log("looking up record");
-  const record = puzzles.find((puzzle) => {
-    const [rank, testuser] = puzzle.split(",");
-    return testuser.toLowerCase() === user.toLowerCase();
-  });
-  console.log("done, record", record.split(""));
+  const record = puzzles
+    .slice(1)
+    .filter((puzzle) => puzzle.length)
+    .find((puzzle) => {
+      const [rank, testuser] = puzzle.split(",");
+      return testuser.toLowerCase() === user.toLowerCase();
+    });
   if (!record) {
     res.send(`${header} ${user} not found`);
     return;
   }
+  console.log("done, record", record.split(""));
   const [rank, username, num, userpuzzles] = record.split(",");
   const userpuzzlelinks = userpuzzles.split(" ").map((puzzle) => {
     const link = `https://lichess.org/training/${puzzle}`;
