@@ -8,7 +8,8 @@
     "nodemon": "latest"
   },
   "dependencies": {
-    "express": "latest"
+    "express": "latest",
+    "download": "latest"
   },
   "scripts": {
     "start": "nodemon server.js"
