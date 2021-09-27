@@ -33,6 +33,11 @@ app.get("/", (req, res) => {
   res.send(header);
 });
 
+function user2link(user) {
+  const link = `https://u39dm.sse.codesandbox.io/user?user=${user}`;
+  return `<a href="${link}" target="_blank" rel="noopener noreferrer">${user}</a>`;
+}
+
 app.get("/user", (req, res) => {
   console.log("user", req.query);
   const user = req.query.user;
@@ -66,7 +71,9 @@ app.get("/toplist", (req, res) => {
   const records = puzzles.slice(start, start + TOPLIST_CHUNK);
   const bare = records.map((record) => {
     const [rank, name, num] = record.split(",");
-    return `<tr><td>${rank}</td><td>${name}</td><td align="center">${num}</td></tr>`;
+    return `<tr><td>${rank}</td><td>${user2link(
+      name
+    )}</td><td align="center">${num}</td></tr>`;
   });
   res.send(
     `${header} <table cellpadding="3" cellspacing="3" border="1"><tr><td>Rank</td><td>User</td><td>Number of puzzles</td></tr>` +
