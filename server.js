@@ -3,9 +3,11 @@ const app = express();
 const port = 3000;
 const download = require("download");
 
+const BASE_URL = `https://u39dm.sse.codesandbox.io/`;
+
 const TOPLIST_CHUNK = 20;
 
-const header = `Lichess puzzles contributors toplist. Api: <a href="https://u39dm.sse.codesandbox.io/toplist?page=1">https://u39dm.sse.codesandbox.io/toplist?page=1</a> , <a href="https://u39dm.sse.codesandbox.io/user?user=DrNykterstein">https://u39dm.sse.codesandbox.io/user?user=DrNykterstein</a> . <hr>\n`;
+const header = `<head><title>Sandbox Server</title></head><body>Lichess puzzles contributors toplist. Api: <a href="${BASE_URL}toplist?page=1">${BASE_URL}toplist?page=1</a> , <a href="${BASE_URL}user?user=DrNykterstein">${BASE_URL}user?user=DrNykterstein</a> . <hr>\n`;
 
 var puzzles = null;
 
@@ -38,7 +40,7 @@ app.get("/", (req, res) => {
 });
 
 function user2link(user) {
-  const link = `https://u39dm.sse.codesandbox.io/user?user=${user}`;
+  const link = `${BASE_URL}user?user=${user}`;
   return `<a href="${link}" target="_blank" rel="noopener noreferrer">${user}</a>`;
 }
 
@@ -93,6 +95,13 @@ app.get("/toplist", (req, res) => {
       "</table>"
   );
 });
+
+/*setInterval((_) => {
+  console.log("loading self");
+  download(BASE_URL).then((blob) => {
+    console.log("self loaded", blob.toString().length);
+  });
+}, 60000);*/
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
