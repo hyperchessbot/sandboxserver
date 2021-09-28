@@ -35,6 +35,8 @@ export default {
 
   TOPLIST_CHUNK: 20,
 
+  NUM_SIMILAR: 20,
+
   ////////////////////////////////
 
   listen: listen

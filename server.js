@@ -86,7 +86,7 @@ app.get("/user", (req, res) => {
         return [testUser[1], leven(user, testUser[1]), testUser[2]];
       })
       .sort((a, b) => a[1] - b[1]);
-    const suggest = similar.slice(0, 10);
+    const suggest = similar.slice(0, config.NUM_SIMILAR);
     const suggestHtml = suggest
       .map(
         (testUser) => `
