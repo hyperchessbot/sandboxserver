@@ -1,6 +1,6 @@
-const config = require("./config");
+import config from "/sandbox/config.js";
 
-module.exports = {
+export default {
   reloadScript: `
 <script>
 const serverStamp = ${config.startStamp}

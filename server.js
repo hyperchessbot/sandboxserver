@@ -1,7 +1,8 @@
-const download = require("download");
+import download from "download";
+import leven from "leven";
 
-const config = require("./config");
-const pagereload = require("./pagereload");
+import config from "/sandbox/config.js";
+import pagereload from "/sandbox/pagereload.js";
 
 const app = config.app;
 
@@ -77,7 +78,24 @@ app.get("/user", (req, res) => {
       return testuser.toLowerCase() === user.toLowerCase();
     });
   if (!record) {
-    res.send(`${header} ${user} not found`);
+    const similar = puzzles
+      .filter((puzzle) => puzzle)
+      .map((puzzle) => {
+        const testUser = puzzle.split(",")[1];
+        return [testUser, leven(user, testUser)];
+      })
+      .sort((a, b) => a[1] - b[1]);
+    const suggest = similar.slice(0, 10);
+    const suggestHtml = suggest
+      .map(
+        (testUser) => `
+      ${user2link(testUser)}
+    `
+      )
+      .join("<br>\n");
+    res.send(
+      `${header} User ${user} not found. Did you mean ...<hr>${suggestHtml}`
+    );
     return;
   }
   console.log("done, record", record.split(""));

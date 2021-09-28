@@ -2,15 +2,17 @@
   "name": "sandboxserver",
   "version": "1.0.0",
   "description": "Example express server created with codesandbox.",
-  "keywords": ["codesandbox", "express", "server"],
+  "keywords": ["xcodesandbox", "express", "server"],
   "main": "server.js",
   "devDependencies": {
     "nodemon": "latest"
   },
   "dependencies": {
     "express": "latest",
-    "download": "latest"
+    "download": "latest",
+    "leven": "latest"
   },
+  "type": "module",
   "scripts": {
     "start": "nodemon server.js"
   }
