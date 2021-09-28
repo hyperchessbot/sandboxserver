@@ -18,7 +18,8 @@ ${pagereload.reloadScript}
 Lichess puzzles contributors toplist and search by user. Endpoints:
 <hr>
 <li><a href="${config.BASE_URL}toplist?page=1">${config.BASE_URL}toplist?page=1</a> ( Contributor Toplist )</li>
-<li><a href="${config.BASE_URL}user?user=DrNykterstein">${config.BASE_URL}user?user=DrNykterstein</a> ( Puzzles of a Contributor)</li>
+<li><a href="${config.BASE_URL}user?user=DrNykterstein">${config.BASE_URL}user?user=DrNykterstein</a> ( Puzzles of a Contributor )</li>
+<li><a href="${config.BASE_URL}user?user=xxx">${config.BASE_URL}user?user=xxx</a> ( Suggest similar Contributors for non existing user name )</li>
 <hr>
 <div id="info">Page up to date with server.</div>
 <hr>
@@ -81,18 +82,18 @@ app.get("/user", (req, res) => {
     const similar = puzzles
       .filter((puzzle) => puzzle)
       .map((puzzle) => {
-        const testUser = puzzle.split(",")[1];
-        return [testUser, leven(user, testUser)];
+        const testUser = puzzle.split(",");
+        return [testUser[1], leven(user, testUser[1]), testUser[2]];
       })
       .sort((a, b) => a[1] - b[1]);
     const suggest = similar.slice(0, 10);
     const suggestHtml = suggest
       .map(
         (testUser) => `
-      ${user2link(testUser)}
+      <li>${user2link(testUser[0])} - ${testUser[2]} puzzle(s)</li>
     `
       )
-      .join("<br>\n");
+      .join("\n");
     res.send(
       `${header} User ${user} not found. Did you mean ...<hr>${suggestHtml}`
     );
