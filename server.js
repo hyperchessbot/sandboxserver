@@ -7,7 +7,44 @@ const BASE_URL = `https://u39dm.sse.codesandbox.io/`;
 
 const TOPLIST_CHUNK = 20;
 
-const header = `<head><title>Sandbox Server</title></head><body>Lichess puzzles contributors toplist. Api: <a href="${BASE_URL}toplist?page=1">${BASE_URL}toplist?page=1</a> , <a href="${BASE_URL}user?user=DrNykterstein">${BASE_URL}user?user=DrNykterstein</a> . <hr>\n`;
+const startStamp = new Date().getTime();
+
+app.get("/stamp", (req, res) => {
+  res.send(`${startStamp}`);
+});
+
+const reloadScript = `
+<script>
+const serverStamp = ${startStamp}
+setInterval(_ => {
+  fetch("${BASE_URL}stamp").then(response => response.text().then(content => {
+    if(parseInt(content) != serverStamp) {
+      console.log("server changed, reloading")      
+      document.getElementById("info").innerHTML="Server changed. Reloading ..."
+      setTimeout(_ => document.location.reload(), 2000)
+    }
+  }))
+},1000)
+</script>
+`;
+
+const header = `
+<head>
+<title>Sandbox Server - Lichess Puzzles Toplist</title>
+${reloadScript}
+</head>
+<body>
+Lichess puzzles contributors toplist and search by user.
+<hr>
+Api:
+Toplist : <a href="${BASE_URL}toplist?page=1">${BASE_URL}toplist?page=1</a>
+|
+User : <a href="${BASE_URL}user?user=DrNykterstein">${BASE_URL}user?user=DrNykterstein</a>
+.
+<hr>
+<div id="info">Page up to date with server.</div>
+<hr>
+`;
 
 var puzzles = null;
 
