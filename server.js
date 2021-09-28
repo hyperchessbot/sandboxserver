@@ -1,48 +1,23 @@
-const express = require("express");
-const app = express();
-const port = 3000;
 const download = require("download");
 
-const BASE_URL = `https://u39dm.sse.codesandbox.io/`;
+const config = require("./config");
+const pagereload = require("./pagereload");
 
-const TOPLIST_CHUNK = 20;
+const app = config.app;
 
-const startStamp = new Date().getTime();
-
-app.get("/stamp", (req, res) => {
-  res.send(`stamp ${startStamp}`);
-});
-
-const reloadScript = `
-<script>
-const serverStamp = ${startStamp}
-setInterval(_ => {
-  fetch("${BASE_URL}stamp").then(response => response.text().then(content => {
-    const [label, stamp] = content.split(" ")
-    if(label != "stamp"){
-      console.log("invalid label")
-      return
-    }
-    if(parseInt(stamp) != serverStamp) {
-      console.log("server changed, reloading")      
-      document.getElementById("info").innerHTML="Server changed. Reloading ..."
-      setTimeout(_ => document.location.reload(), 1000)
-    }
-  }))
-},1000)
-</script>
-`;
+/////////////////////////////////////
+// setup
 
 const header = `
 <head>
 <title>Sandbox Server - Lichess Puzzles Toplist</title>
-${reloadScript}
+${pagereload.reloadScript}
 </head>
 <body>
 Lichess puzzles contributors toplist and search by user. Endpoints:
 <hr>
-<li><a href="${BASE_URL}toplist?page=1">${BASE_URL}toplist?page=1</a> ( Contributor Toplist )</li>
-<li><a href="${BASE_URL}user?user=DrNykterstein">${BASE_URL}user?user=DrNykterstein</a> ( Puzzles of a Contributor)</li>
+<li><a href="${config.BASE_URL}toplist?page=1">${config.BASE_URL}toplist?page=1</a> ( Contributor Toplist )</li>
+<li><a href="${config.BASE_URL}user?user=DrNykterstein">${config.BASE_URL}user?user=DrNykterstein</a> ( Puzzles of a Contributor)</li>
 <hr>
 <div id="info">Page up to date with server.</div>
 <hr>
@@ -74,14 +49,17 @@ function noPuzzles() {
   return `${header} Database not yet downloaded. Try a bit later.`;
 }
 
+function user2link(user) {
+  const link = `${config.BASE_URL}user?user=${user}`;
+  return `<a href="${link}" target="_blank" rel="noopener noreferrer">${user}</a>`;
+}
+
+/////////////////////////////////////
+// routes
+
 app.get("/", (req, res) => {
   res.send(header);
 });
-
-function user2link(user) {
-  const link = `${BASE_URL}user?user=${user}`;
-  return `<a href="${link}" target="_blank" rel="noopener noreferrer">${user}</a>`;
-}
 
 app.get("/user", (req, res) => {
   if (!puzzles) {
@@ -135,6 +113,9 @@ app.get("/toplist", (req, res) => {
   );
 });
 
+/////////////////////////////////////
+// keep alive
+
 /*setInterval((_) => {
   console.log("loading self");
   download(BASE_URL).then((blob) => {
@@ -142,6 +123,7 @@ app.get("/toplist", (req, res) => {
   });
 }, 60000);*/
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+/////////////////////////////////////
+// start server
+
+config.listen();
