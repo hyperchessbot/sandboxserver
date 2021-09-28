@@ -98,8 +98,8 @@ app.get("/toplist", (req, res) => {
   }
   console.log("toplist", req.query);
   const page = parseInt(req.query.page, 10) - 1;
-  const start = page * TOPLIST_CHUNK + 1;
-  const records = puzzles.slice(start, start + TOPLIST_CHUNK);
+  const start = page * config.TOPLIST_CHUNK + 1;
+  const records = puzzles.slice(start, start + config.TOPLIST_CHUNK);
   const bare = records.map((record) => {
     const [rank, name, num] = record.split(",");
     return `<tr><td>${rank}</td><td>${user2link(
