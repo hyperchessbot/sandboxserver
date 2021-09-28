@@ -10,7 +10,7 @@ const TOPLIST_CHUNK = 20;
 const startStamp = new Date().getTime();
 
 app.get("/stamp", (req, res) => {
-  res.send(`${startStamp}`);
+  res.send(`stamp ${startStamp}`);
 });
 
 const reloadScript = `
@@ -18,10 +18,15 @@ const reloadScript = `
 const serverStamp = ${startStamp}
 setInterval(_ => {
   fetch("${BASE_URL}stamp").then(response => response.text().then(content => {
-    if(parseInt(content) != serverStamp) {
+    const [label, stamp] = content.split(" ")
+    if(label != "stamp"){
+      console.log("invalid label")
+      return
+    }
+    if(parseInt(stamp) != serverStamp) {
       console.log("server changed, reloading")      
       document.getElementById("info").innerHTML="Server changed. Reloading ..."
-      setTimeout(_ => document.location.reload(), 2000)
+      setTimeout(_ => document.location.reload(), 1000)
     }
   }))
 },1000)
@@ -34,13 +39,10 @@ const header = `
 ${reloadScript}
 </head>
 <body>
-Lichess puzzles contributors toplist and search by user.
+Lichess puzzles contributors toplist and search by user. Endpoints:
 <hr>
-Api:
-Toplist : <a href="${BASE_URL}toplist?page=1">${BASE_URL}toplist?page=1</a>
-|
-User : <a href="${BASE_URL}user?user=DrNykterstein">${BASE_URL}user?user=DrNykterstein</a>
-.
+<li><a href="${BASE_URL}toplist?page=1">${BASE_URL}toplist?page=1</a> ( Contributor Toplist )</li>
+<li><a href="${BASE_URL}user?user=DrNykterstein">${BASE_URL}user?user=DrNykterstein</a> ( Puzzles of a Contributor)</li>
 <hr>
 <div id="info">Page up to date with server.</div>
 <hr>
