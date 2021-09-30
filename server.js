@@ -135,14 +135,21 @@ app.get("/toplist", (req, res) => {
 /////////////////////////////////////
 // keep alive
 
+let refreshes = [];
+
 setInterval((_) => {
   console.log("loading self");
   download(
     `https://discordlambda.netlify.app/.netlify/functions/geturl?url=${config.BASE_URL}`
   ).then((blob) => {
     console.log("self loaded", blob.toString().length);
+    refreshes.unshift(new Date().toLocaleString());
   });
 }, 60000);
+
+app.get("/refr", (req, res) => {
+  res.send(`${refreshes.join("<br>\n")}`);
+});
 
 /////////////////////////////////////
 // start server
