@@ -137,15 +137,29 @@ app.get("/toplist", (req, res) => {
 
 let refreshes = [];
 
-setInterval((_) => {
+function refrFunc() {
   console.log("loading self");
   download(
     `https://discordlambda.netlify.app/.netlify/functions/geturl?url=${config.BASE_URL}`
   ).then((blob) => {
     console.log("self loaded", blob.toString().length);
-    refreshes.unshift(new Date().toLocaleString());
+    download(`https://lichess.org`).then((blob) => {
+      const parts = blob
+        .toString()
+        .split(`strong data-count="`)
+        .slice(1)
+        .map((part) => part.split(`"`)[0]);
+
+      refreshes.unshift(
+        new Date().toLocaleString() + ` players ${parts[0]} games ${parts[1]}`
+      );
+    });
   });
-}, 60000);
+}
+
+refrFunc();
+
+setInterval(refrFunc, 60000);
 
 app.get("/refr", (req, res) => {
   res.send(`${refreshes.join("<br>\n")}`);
