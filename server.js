@@ -135,12 +135,14 @@ app.get("/toplist", (req, res) => {
 /////////////////////////////////////
 // keep alive
 
-/*setInterval((_) => {
+setInterval((_) => {
   console.log("loading self");
-  download(BASE_URL).then((blob) => {
+  download(
+    `https://discordlambda.netlify.app/.netlify/functions/geturl?url=${config.BASE_URL}`
+  ).then((blob) => {
     console.log("self loaded", blob.toString().length);
   });
-}, 60000);*/
+}, 60000);
 
 /////////////////////////////////////
 // start server
